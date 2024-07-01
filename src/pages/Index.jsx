@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 
 const Index = () => {
   const [supplier, setSupplier] = useState("");
   const [numberOfItems, setNumberOfItems] = useState("");
   const [deviceType, setDeviceType] = useState("");
+  const [stockData, setStockData] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,12 +19,16 @@ const Index = () => {
       toast.error("Please fill in all fields.");
       return;
     }
+    const newStock = { supplier, numberOfItems, deviceType };
+    setStockData([...stockData, newStock]);
     toast.success("Stock information submitted successfully!");
-    // Here you can handle the form submission, e.g., send the data to a server or update the state
+    setSupplier("");
+    setNumberOfItems("");
+    setDeviceType("");
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="h-screen w-screen flex items-center justify-center flex-col space-y-8">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Stock Tracker</CardTitle>
@@ -63,6 +69,31 @@ const Index = () => {
             </div>
             <Button type="submit" className="w-full">Submit</Button>
           </form>
+        </CardContent>
+      </Card>
+      <Card className="w-full max-w-4xl">
+        <CardHeader>
+          <CardTitle>Stock Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Supplier</TableHead>
+                <TableHead>Number of Items</TableHead>
+                <TableHead>Device Type</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {stockData.map((stock, index) => (
+                <TableRow key={index}>
+                  <TableCell>{stock.supplier}</TableCell>
+                  <TableCell>{stock.numberOfItems}</TableCell>
+                  <TableCell>{stock.deviceType}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>
